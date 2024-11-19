@@ -6,15 +6,19 @@ body,
 }
 
 body {
-    background-color: #e4fde1;
+    background-color: #0a0d0f;
     height: 100vh;
-    cursor: none;
+    /* cursor: none; */
 }
 
 #SceneDiv {
     height: 100vh;
     width: 100wh;
-    filter: blur(100px);
+    /* filter: blur(100px); */
+}
+
+#SceneDiv[data-blur="true"] {
+    filter: blur(90px);
 }
 
 .divvie {
