@@ -3,12 +3,27 @@ import { Canvas } from "@react-three/fiber";
 import { Float, Environment } from "@react-three/drei";
 import { useControls } from "leva";
 import { useEffect, useRef, useState } from "react";
-const colors = ["#FCFC62", "#4062BB", "#F7A072", "#D90368"];
+const colors = [
+    "#FCFC62",
+    "#4062BB",
+    "#F7A072",
+    "#D90368",
+    "#34A853",
+    "#EA4335",
+    "#FBBC05",
+    "#4285F4",
+    "#FF5733",
+    "#C70039",
+    "#900C3F",
+    "#2ECC71",
+    "#3498DB",
+    "#9B59B6",
+];
 const shapes = ["box", "sphere", "capsule", "capsule", "cone", "torus"];
 
 export default function App() {
     const bgRef = useRef<HTMLDivElement | null>(null);
-    const { speed, spread, objectCount } = useControls({
+    const { speed, spread, objectCount, intensity } = useControls({
         blurMode: {
             value: false,
             onChange: (newValue) => {
@@ -28,7 +43,7 @@ export default function App() {
         },
         speed: {
             value: 1,
-            min: 1.1,
+            min: 1,
             max: 6,
             step: 0.05,
         },
@@ -37,6 +52,12 @@ export default function App() {
             min: 0,
             max: 1.5,
             step: 0.05,
+        },
+        intensity: {
+            value: 5,
+            min: 0,
+            max: 15,
+            step: 1,
         },
     });
 
@@ -57,24 +78,31 @@ export default function App() {
 
     return (
         <>
-            <div className="divvie">
+            {/* <div className="divvie">
                 <p>Skibidi</p>
-            </div>
+            </div> */}
             <div ref={bgRef} id="SceneDiv">
                 <Canvas>
                     {shapes.map((key, index) => {
-                        const pos = (index - shapes.length / 2 + 0.1) * spread;
+                        const pos = (index - shapes.length / 2 + 0.5) * spread;
                         const randomColor = getRandomColor();
+                        const randSquare = Math.random() + 1;
                         return (
                             <Float
                                 speed={speed}
-                                rotationIntensity={Math.random() * 5}
-                                floatIntensity={5}
+                                rotationIntensity={(Math.random() + 1) * 5}
+                                floatIntensity={intensity}
                                 key={index}
                             >
                                 <mesh position={[pos, 0, 0]}>
                                     {key === "box" && (
-                                        <boxGeometry args={[1.5, 1.5, 1.5]} />
+                                        <boxGeometry
+                                            args={[
+                                                randSquare,
+                                                randSquare,
+                                                randSquare,
+                                            ]}
+                                        />
                                     )}
                                     {key === "sphere" && (
                                         <sphereGeometry args={[1.3, 32, 32]} />
@@ -89,7 +117,7 @@ export default function App() {
                                     )}
                                     {key === "torus" && (
                                         <torusGeometry
-                                            args={[1.2, 0.6, 16, 100]}
+                                            args={[1.1, 0.4, 16, 100]}
                                         />
                                     )}
                                     <meshPhongMaterial color={randomColor} />
