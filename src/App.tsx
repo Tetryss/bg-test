@@ -73,7 +73,6 @@ export default function App() {
         const newShapes = fillRandomShapes(objectCount);
         setShapes([]);
         setShapes([...newShapes]);
-        setShapes;
     }, [objectCount]);
 
     return (
@@ -135,7 +134,7 @@ export default function App() {
 }
 
 const getRandomColor = (): string => {
-    const randNum = Math.floor(Math.random() * colors.length); // Fix random calculation
+    const randNum = Math.floor(Math.random() * colors.length);
     return colors[randNum];
 };
 
@@ -143,7 +142,7 @@ const fillRandomShapes = (count: number): Array<string> => {
     let retVal: Array<string> = [];
     for (let i = 0; i < count; i++) {
         // Fix increment
-        const randNum = Math.floor(Math.random() * shapes.length); // Fix random calculation
+        const randNum = Math.floor(Math.random() * shapes.length);
         retVal.push(shapes[randNum]);
     }
     return retVal;
