@@ -19,13 +19,13 @@ const colors = [
     "#3498DB",
     "#9B59B6",
 ];
-const shapes = ["box", "sphere", "capsule", "capsule", "cone", "torus"];
+const shapes = ["box", "sphere", "capsule", "cone", "torus"];
 
 export default function App() {
     const bgRef = useRef<HTMLDivElement | null>(null);
     const { speed, spread, objectCount, intensity } = useControls({
         blurMode: {
-            value: false,
+            value: true,
             onChange: (newValue) => {
                 if (bgRef.current) {
                     bgRef.current.setAttribute(
@@ -50,7 +50,7 @@ export default function App() {
         spread: {
             value: 1,
             min: 0,
-            max: 1.5,
+            max: 2,
             step: 0.05,
         },
         intensity: {
@@ -62,12 +62,11 @@ export default function App() {
     });
 
     const [shapes, setShapes] = useState([
-        "box",
-        "sphere",
-        "capsule",
-        "capsule",
-        "cone",
-        "torus",
+        { color: "blue", name: "box" },
+        { color: "blue", name: "sphere" },
+        { color: "blue", name: "capsule" },
+        { color: "blue", name: "cone" },
+        { color: "blue", name: "torus" },
     ]);
     useEffect(() => {
         const newShapes = fillRandomShapes(objectCount);
@@ -82,10 +81,12 @@ export default function App() {
             </div> */}
             <div ref={bgRef} id="SceneDiv">
                 <Canvas>
-                    {shapes.map((key, index) => {
+                    {shapes.map(({ color, name }, index) => {
                         const pos = (index - shapes.length / 2 + 0.5) * spread;
-                        const randomColor = getRandomColor();
                         const randSquare = Math.random() + 1;
+                        const randCircle = Math.random() / 2 + 1;
+                        const randTorus = Math.random() / 2 + 0.5;
+
                         return (
                             <Float
                                 speed={speed}
@@ -94,7 +95,7 @@ export default function App() {
                                 key={index}
                             >
                                 <mesh position={[pos, 0, 0]}>
-                                    {key === "box" && (
+                                    {name === "box" && (
                                         <boxGeometry
                                             args={[
                                                 randSquare,
@@ -103,23 +104,36 @@ export default function App() {
                                             ]}
                                         />
                                     )}
-                                    {key === "sphere" && (
-                                        <sphereGeometry args={[1.3, 32, 32]} />
+                                    {name === "sphere" && (
+                                        <sphereGeometry
+                                            args={[randCircle, 32, 32]}
+                                        />
                                     )}
-                                    {key === "capsule" && (
+                                    {name === "capsule" && (
                                         <capsuleGeometry
                                             args={[0.5, 1.2, 2, 8]}
                                         />
                                     )}
-                                    {key === "cone" && (
-                                        <coneGeometry args={[1.8, 3, 16]} />
-                                    )}
-                                    {key === "torus" && (
-                                        <torusGeometry
-                                            args={[1.1, 0.4, 16, 100]}
+                                    {name === "cone" && (
+                                        <coneGeometry
+                                            args={[
+                                                randSquare * 0.8,
+                                                randSquare * 2.7,
+                                                16,
+                                            ]}
                                         />
                                     )}
-                                    <meshPhongMaterial color={randomColor} />
+                                    {name === "torus" && (
+                                        <torusGeometry
+                                            args={[
+                                                randTorus,
+                                                randTorus - 0.3,
+                                                16,
+                                                100,
+                                            ]}
+                                        />
+                                    )}
+                                    <meshPhongMaterial color={color} />
                                 </mesh>
                             </Float>
                         );
@@ -138,12 +152,13 @@ const getRandomColor = (): string => {
     return colors[randNum];
 };
 
-const fillRandomShapes = (count: number): Array<string> => {
-    let retVal: Array<string> = [];
+const fillRandomShapes = (count: number) => {
+    let retVal = [];
     for (let i = 0; i < count; i++) {
         // Fix increment
         const randNum = Math.floor(Math.random() * shapes.length);
-        retVal.push(shapes[randNum]);
+        const col = getRandomColor();
+        retVal.push({ color: col, name: shapes[randNum] });
     }
     return retVal;
 };
