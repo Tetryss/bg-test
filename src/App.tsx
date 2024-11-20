@@ -11,6 +11,7 @@ const colors = [
     "#34A853",
     "#EA4335",
     "#FBBC05",
+    "#013281",
     "#4285F4",
     "#FF5733",
     "#C70039",
@@ -23,7 +24,7 @@ const shapes = ["box", "sphere", "capsule", "cone", "torus"];
 
 export default function App() {
     const bgRef = useRef<HTMLDivElement | null>(null);
-    const { speed, spread, objectCount, intensity } = useControls({
+    const { speed, spread, objectCount, intensity, brightness } = useControls({
         blurMode: {
             value: true,
             onChange: (newValue) => {
@@ -59,6 +60,12 @@ export default function App() {
             max: 15,
             step: 1,
         },
+        brightness: {
+            value: 0.9,
+            min: 0.5,
+            max: 5,
+            step: 0.1,
+        },
     });
 
     const [shapes, setShapes] = useState([
@@ -84,13 +91,13 @@ export default function App() {
                     {shapes.map(({ color, name }, index) => {
                         const pos = (index - shapes.length / 2 + 0.5) * spread;
                         const randSquare = Math.random() + 1;
-                        const randCircle = Math.random() / 2 + 1;
+                        const randCircle = Math.random() * 0.4 + 1;
                         const randTorus = Math.random() / 2 + 0.5;
 
                         return (
                             <Float
                                 speed={speed}
-                                rotationIntensity={(Math.random() + 1) * 5}
+                                rotationIntensity={Math.random() * 9 + 1}
                                 floatIntensity={intensity}
                                 key={index}
                             >
@@ -118,7 +125,7 @@ export default function App() {
                                         <coneGeometry
                                             args={[
                                                 randSquare * 0.8,
-                                                randSquare * 2.7,
+                                                randSquare * 2,
                                                 16,
                                             ]}
                                         />
@@ -139,7 +146,7 @@ export default function App() {
                         );
                     })}
                     <Environment preset="studio" />
-                    <ambientLight intensity={0.5} />
+                    <ambientLight intensity={brightness} />
                     <directionalLight position={[0, 0, 1]} />
                 </Canvas>
             </div>
