@@ -1,6 +1,6 @@
 import "./App.css";
 import { Canvas } from "@react-three/fiber";
-import { Float, Environment, MeshDistortMaterial } from "@react-three/drei";
+import { Float, Environment } from "@react-three/drei";
 import { useControls } from "leva";
 import { useEffect, useRef, useState } from "react";
 const colors = [
