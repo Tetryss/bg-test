@@ -1,6 +1,6 @@
 import "./App.css";
 import { Canvas } from "@react-three/fiber";
-import { Float, Environment } from "@react-three/drei";
+import { Float, Environment, MeshDistortMaterial } from "@react-three/drei";
 import { useControls } from "leva";
 import { useEffect, useRef, useState } from "react";
 const colors = [
@@ -20,11 +20,22 @@ const colors = [
     "#3498DB",
     "#9B59B6",
 ];
+const chrimisTheme = ["#ff1e44", "#E87493", "#F6F4F7", "#db203f", "#B11A33"];
+
 const shapes = ["box", "sphere", "capsule", "cone", "torus"];
 
 export default function App() {
     const bgRef = useRef<HTMLDivElement | null>(null);
-    const { speed, spread, objectCount, intensity, brightness } = useControls({
+    const {
+        speed,
+        spread,
+        objectCount,
+        intensity,
+        brightness,
+        chrimisTheme,
+        text,
+    } = useControls({
+        chrimisTheme: false,
         blurMode: {
             value: true,
             onChange: (newValue) => {
@@ -46,7 +57,7 @@ export default function App() {
             value: 1,
             min: 1,
             max: 6,
-            step: 0.05,
+            step: 0.1,
         },
         spread: {
             value: 1,
@@ -66,6 +77,9 @@ export default function App() {
             max: 5,
             step: 0.1,
         },
+        text: {
+            value: "",
+        },
     });
 
     const [shapes, setShapes] = useState([
@@ -76,16 +90,21 @@ export default function App() {
         { color: "blue", name: "torus" },
     ]);
     useEffect(() => {
-        const newShapes = fillRandomShapes(objectCount);
+        const newShapes = fillRandomShapes(objectCount, chrimisTheme);
         setShapes([]);
         setShapes([...newShapes]);
-    }, [objectCount]);
+    }, [objectCount, chrimisTheme]);
+    useEffect(() => {
+        console.log("Changed Text Field!");
+    }, [[], text]);
 
     return (
         <>
-            {/* <div className="divvie">
-                <p>Skibidi</p>
-            </div> */}
+            {text && (
+                <div className="divvie">
+                    <p>{text}</p>
+                </div>
+            )}
             <div ref={bgRef} id="SceneDiv">
                 <Canvas>
                     {shapes.map(({ color, name }, index) => {
@@ -145,7 +164,7 @@ export default function App() {
                             </Float>
                         );
                     })}
-                    <Environment preset="studio" />
+                    <Environment preset="apartment" />
                     <ambientLight intensity={brightness} />
                     <directionalLight position={[0, 0, 1]} />
                 </Canvas>
@@ -154,17 +173,23 @@ export default function App() {
     );
 }
 
-const getRandomColor = (): string => {
-    const randNum = Math.floor(Math.random() * colors.length);
-    return colors[randNum];
+const getRandomColor = (bool: boolean): string => {
+    let randNum: number;
+    if (bool) {
+        randNum = Math.floor(Math.random() * chrimisTheme.length);
+        return chrimisTheme[randNum];
+    } else {
+        randNum = Math.floor(Math.random() * colors.length);
+        return colors[randNum];
+    }
 };
 
-const fillRandomShapes = (count: number) => {
+const fillRandomShapes = (count: number, bool: boolean) => {
     let retVal = [];
     for (let i = 0; i < count; i++) {
         // Fix increment
         const randNum = Math.floor(Math.random() * shapes.length);
-        const col = getRandomColor();
+        const col = getRandomColor(bool);
         retVal.push({ color: col, name: shapes[randNum] });
     }
     return retVal;

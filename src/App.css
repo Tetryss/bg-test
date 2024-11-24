@@ -30,13 +30,14 @@ body {
     text-align: center;
     position: absolute;
     background-color: rgba(250, 250, 250, 0.03);
-    width: 25%;
+    width: fit-content;
+    height: fit-content;
     top: 50%;
     left: 50%;
     border-radius: 2rem;
     transform: translate(-50%, -50%);
-    height: 25vh;
     box-shadow: rgba(0, 0, 0, 0.2) 5px 10px 10px;
+    padding: 0.5rem;
 }
 
 p {
